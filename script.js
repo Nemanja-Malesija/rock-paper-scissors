@@ -23,13 +23,13 @@ let computerScore = 0;
 
 let playerChoice;
 let computerChoice;
-let clicked;
+let playerPlay;
+let compPlay;
 
 // functions
 const computerPlay = function () {
   return choice[Math.floor(Math.random() * choice.length)];
 };
-const compPlay = computerPlay();
 
 const displayScore = function () {
   labelPlayer.textContent = `Player score: ${playerScore}`;
@@ -55,7 +55,7 @@ const playRound = function (playerSelection, computerSelection) {
     (playerSelection === 'scissors' && computerSelection === 'paper')
   ) {
     playerScore++;
-    displayMessage(`Player wins: ${clicked} beats ${compPlay}!`);
+    displayMessage(`Player wins: ${playerPlay} beats ${compPlay}!`);
   }
   // test for computer win
   else if (
@@ -64,17 +64,19 @@ const playRound = function (playerSelection, computerSelection) {
     (playerSelection === 'scissors' && computerSelection === 'rock')
   ) {
     computerScore++;
-    displayMessage(`Computer wins: ${compPlay} beats ${clicked}!`);
+    displayMessage(`Computer wins: ${compPlay} beats ${playerPlay}!`);
   }
 };
 
 // Main logic
 container.addEventListener('click', function (e) {
-  //
   // find target of click, store attribute in a variable
   if (e.target.classList.contains('btn')) {
-    clicked = e.target.dataset.choice;
-    playRound(clicked, compPlay);
+    playerPlay = e.target.dataset.choice;
+
+    // get computer random number each time, call playRound
+    compPlay = computerPlay();
+    playRound(playerPlay, compPlay);
   }
 
   // display score
