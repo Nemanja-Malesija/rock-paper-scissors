@@ -7,11 +7,14 @@ const btn1 = document.querySelector('.btn1');
 const btn2 = document.querySelector('.btn2');
 const btn3 = document.querySelector('.btn3');
 const allButtons = document.querySelectorAll('.btn');
-
+const labelPlayer = document.querySelector('.score--track--player');
+const labelComputer = document.querySelector('.score--track--computer');
+const btnsPlayAgain = document.querySelectorAll('.para-sub');
 const overlay = document.querySelector('.overlay');
 const playerDisplay = document.querySelector('.div--player');
 const computerDisplay = document.querySelector('.div--computer');
 
+// store possible choices
 const choice = ['rock', 'paper', 'scissors'];
 
 // global variables
@@ -20,10 +23,21 @@ let computerScore = 0;
 
 let playerChoice;
 let computerChoice;
+let clicked;
 
 // functions
 const computerPlay = function () {
   return choice[Math.floor(Math.random() * choice.length)];
+};
+const compPlay = computerPlay();
+
+const displayScore = function () {
+  labelPlayer.textContent = `Player score: ${playerScore}`;
+  labelComputer.textContent = `Computer score: ${computerScore}`;
+};
+
+const displayMessage = function (msg) {
+  message.textContent = msg;
 };
 
 const playRound = function (playerSelection, computerSelection) {
@@ -33,7 +47,7 @@ const playRound = function (playerSelection, computerSelection) {
     (playerSelection === 'paper' && computerSelection === 'paper') ||
     (playerSelection === 'scissors' && computerSelection === 'scissors')
   )
-    message.textContent = 'DRAW';
+    displayMessage('DRAW');
   // test for player win
   else if (
     (playerSelection === 'rock' && computerSelection === 'scissors') ||
@@ -41,72 +55,59 @@ const playRound = function (playerSelection, computerSelection) {
     (playerSelection === 'scissors' && computerSelection === 'paper')
   ) {
     playerScore++;
-    message.textContent = 'PLAYER WINS';
-
-    // test for computer win
-  } else if (
+    displayMessage(`Player wins: ${clicked} beats ${compPlay}!`);
+  }
+  // test for computer win
+  else if (
     (playerSelection === 'rock' && computerSelection === 'paper') ||
     (playerSelection === 'paper' && computerSelection === 'scissors') ||
     (playerSelection === 'scissors' && computerSelection === 'rock')
   ) {
     computerScore++;
-    message.textContent = 'COMPUTER WINS';
+    displayMessage(`Computer wins: ${compPlay} beats ${clicked}!`);
   }
 };
 
-/* Create three buttons, one for each selection. Add an event listener to the buttons that call your playRound function with the correct playerSelection every time a button is clicked. (you can keep the console.logs for this step)
-Add a div for displaying results and change all of your console.logs into DOM methods.
-Display the running score, and announce a winner of the game once one player reaches 5 points. */
-
-// select button elements
-
-// run add event listener on a div
+// Main logic
 container.addEventListener('click', function (e) {
+  //
+  // find target of click, store attribute in a variable
   if (e.target.classList.contains('btn')) {
-    const clicked = e.target.dataset.choice;
-    playRound(clicked, computerPlay());
+    clicked = e.target.dataset.choice;
+    playRound(clicked, compPlay);
   }
+
+  // display score
+  displayScore();
 
   // player wins
   if (computerScore === 5) {
-    message.textContent = 'COMPUTER WINS THE GAME';
+    displayMessage('COMPUTER WINS THE GAME');
     computerDisplay.classList.add('winner');
     overlay.classList.remove('hidden');
-
-    // computer wins
-  } else if (playerScore === 5) {
-    message.textContent = 'YOU WIN THE GAME';
+  }
+  // computer wins
+  else if (playerScore === 5) {
+    displayMessage('YOU WIN THE GAME');
     playerDisplay.classList.add('winner');
     overlay.classList.remove('hidden');
   }
 });
 
-// take e.target attribute
+// Reset game
+btnsPlayAgain.forEach((el) =>
+  el.addEventListener('click', function () {
+    //
+    // remove classes from overlay and winner message
+    overlay.classList.add('hidden');
+    computerDisplay.classList.remove('winner');
+    playerDisplay.classList.remove('winner');
 
-// run playRound with (clicked, computer)
+    // reset scores
+    computerScore = 0;
+    playerScore = 0;
 
-// 1. add event listeners to buttons.
-
-// when button clicked, playRound
-
-// selection from round
-
-/*
-const game = function () {
-  for (let i = 0; i < 5; i++) {
-    computerChoice = computerPlay();
-    playerChoice = prompt(
-      'Choose your destiny! Rock, Paper or Scissors?'
-    ).toLowerCase();
-    playRound(playerChoice, computerChoice);
-  }
-
-  if (computerScore > playerScore)
-    console.log('Computer is the winner of the game');
-  else if (playerScore > computerScore)
-    console.log('Player is the winner of the game!');
-  else console.log("It's a draw! We have no winner!");
-};
-
-game();
-*/
+    displayScore();
+    displayMessage('Choose your destiny! Rock, Paper or Scissors');
+  })
+);
