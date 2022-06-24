@@ -83,13 +83,13 @@ container.addEventListener('click', function (e) {
   displayScore();
 
   // player wins
-  if (computerScore === 5) {
+  if (computerScore === 3) {
     displayMessage('COMPUTER WINS THE GAME');
     computerDisplay.classList.add('winner');
     overlay.classList.remove('hidden');
   }
   // computer wins
-  else if (playerScore === 5) {
+  else if (playerScore === 3) {
     displayMessage('YOU WIN THE GAME');
     playerDisplay.classList.add('winner');
     overlay.classList.remove('hidden');
